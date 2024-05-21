@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.example-form-field {
+  width: 200px;
+}
+
+p-table {
+  width: 100%;
+}
+
+p-table th, p-table td {
+  text-align: left;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+p-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+p-table td {
+  background-color: #fff;
+}
+
+p-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}

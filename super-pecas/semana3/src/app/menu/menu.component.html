@@ -1,0 +1,21 @@
+<mat-sidenav-container class="example-container">
+    <mat-sidenav mode="side" opened>
+      <mat-toolbar>
+        <img src="assets/logo.png" alt="Logo">
+      </mat-toolbar>
+      <mat-nav-list>
+        <mat-list-item>
+          <mat-icon>account_circle</mat-icon>
+          <span>Nome do Usuário</span>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/">Home</a>
+        <a mat-list-item routerLink="/carros">Carros</a>
+        <a mat-list-item routerLink="/pecas">Peças</a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  

@@ -1,0 +1,42 @@
+<mat-toolbar color="primary">
+    <span>Listagem de Carros</span>
+  </mat-toolbar>
+  <div class="container">
+    <button mat-raised-button color="primary" (click)="cadastrarCarro()">Cadastrar carro</button>
+    <mat-form-field class="example-form-field">
+      <mat-label>Pesquisar</mat-label>
+      <input matInput (keyup)="pesquisar($event)">
+      <button mat-button *ngIf="pesquisa" matSuffix mat-icon-button aria-label="Clear" (click)="clearPesquisa()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <p-table [value]="carros" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [lazy]="true" (onLazyLoad)="loadCars($event)" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Nome do Modelo</th>
+        <th>Fabricante</th>
+        <th>Código Único</th>
+        <th>Ações</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-carro>
+      <tr>
+        <td>{{carro.id}}</td>
+        <td>{{carro.nomeModelo}}</td>
+        <td>{{carro.fabricante}}</td>
+        <td>{{carro.codigoUnico}}</td>
+        <td>
+          <button mat-icon-button color="accent" (click)="editarCarro(carro)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="removerCarro(carro.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <paginator></paginator>
+  
