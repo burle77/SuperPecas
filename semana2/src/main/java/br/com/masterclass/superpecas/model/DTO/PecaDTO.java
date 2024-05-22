@@ -1,17 +1,15 @@
 package br.com.masterclass.superpecas.model.DTO;
 
-import br.com.masterclass.superpecas.model.CarroModel;
-
 public class PecaDTO {
-    int id;
-    String nome;
-    String descricao;
-    String numeroSerie;
-    String fabricante;
-    String modeloCarro;
-    String carroNomeModelo;
-    String carroFabricante;
-    Integer carroId;
+    private int id;
+    private String nome;
+    private String descricao;
+    private String numeroSerie;
+    private String fabricante;
+    private String modeloCarro;
+    private String carroNomeModelo;
+    private String carroFabricante;
+    private Integer carroId;
 
     public int getId() {
         return id;

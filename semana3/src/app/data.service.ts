@@ -20,7 +20,28 @@ export class DataService {
   getTop10CarrosComMaisPecas(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/peca/listaTop10CarroComMaisPecas`);
   }
+  getFabricantes(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/carro/listaTodosFabricantes`);
+  }
+
+  getCarroById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/carro/${id}`);
+  }
+
+  addCarro(carro: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/carro`, carro);
+  }
+
+  updateCarro(id: string, carro: any): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}/carro`, carro);
+  }
+
   getCarrosPaginados(page: number, size: number, termo: string = ''): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/carro/listaTodosPaginado${termo}?page=${page}&size=${size}`);
+    if (termo) {
+      return this.http.get<any>(`${this.baseUrl}/carro/listaTodosPaginado/${termo}?page=${page}&size=${size}`);
+    } else {
+      return this.http.get<any>(`${this.baseUrl}/carro/listaTodosPaginado?page=${page}&size=${size}`);
+    }
   }
 }
+

@@ -1,10 +1,7 @@
 package br.com.masterclass.superpecas.service;
 
-import br.com.masterclass.superpecas.model.CarroModel;
 import br.com.masterclass.superpecas.model.DTO.TopCarroPecasDTO;
-import br.com.masterclass.superpecas.model.DTO.TopFabricantesDTO;
 import br.com.masterclass.superpecas.model.PecaModel;
-import br.com.masterclass.superpecas.repository.CarroRepository;
 import br.com.masterclass.superpecas.repository.PecaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,7 +29,7 @@ public class PecaService {
     }
 
     public Page<PecaModel> listaPecasPorNomeEOuNumeroSerie(String termo, Pageable pageable){
-        return pecaRepository.findByNomeOrNumeroSerieOrFabricanteOrModeloCarro(termo, pageable);
+        return pecaRepository.findByNomeOrNumeroSerieOrFabricante(termo, pageable);
     }
 
     public PecaModel gravaPeca(PecaModel peca){
@@ -54,7 +51,7 @@ public class PecaService {
 
         PecaModel existeMesmoNome = pecaRepository.findByNomeAndNumeroSerie(peca.getNome(), peca.getNumeroSerie());
 
-        if (existeMesmoNome != null && existeMesmoNome.getId()!= peca.getId()){
+        if (existeMesmoNome != null && existeMesmoNome.getId() != peca.getId()){
             return null;
         }
 

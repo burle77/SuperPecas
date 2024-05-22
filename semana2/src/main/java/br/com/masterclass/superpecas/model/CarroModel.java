@@ -1,30 +1,32 @@
 package br.com.masterclass.superpecas.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "Carros")
+@Table(name = "carros")
 public class CarroModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CarroID", nullable = false)
-    int id;
-    @Column(name = "NomeModelo", nullable = false)
-    String nomeModelo;
-    @NotNull
-    String fabricante;
-    @Column(name = "CodigoUnico", nullable = false)
-    String codigoUnico;
+    private Integer id;
 
-    public int getId() {
+    @Column(name = "NomeModelo", nullable = false)
+    private String nomeModelo;
+
+    @Column(name = "Fabricante", nullable = false)
+    private String fabricante;
+
+    @Column(name = "CodigoUnico", nullable = false, unique = true)
+    private String codigoUnico;
+
+    // Getters e setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
