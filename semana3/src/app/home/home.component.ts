@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as CanvasJS from '@canvasjs/charts';
-import { DataService } from '../data.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Chart, ChartOptions, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-home',
@@ -8,46 +9,93 @@ import { DataService } from '../data.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  topFabricantesChart: any;
+  topCarrosChart: any;
+  apiUrl = environment.apiUrl;
 
-  constructor(private dataService: DataService) { }
+  constructor(private http: HttpClient) {
+    Chart.register(...registerables);
+  }
 
   ngOnInit(): void {
-    this.dataService.getTop10Fabricantes().subscribe(data => {
-      this.renderTop10FabricantesChart(data);
-    });
+    this.loadTopFabricantes();
+    this.loadTopCarrosComMaisPecas();
+  }
 
-    this.dataService.getTop10CarrosComMaisPecas().subscribe(data => {
-      this.renderTop10CarrosChart(data);
+  loadTopFabricantes(): void {
+    this.http.get<any[]>(`${this.apiUrl}/carro/listaTop10Fabricantes`).subscribe(data => {
+      const fabricantes = data.map(item => item.fabricante);
+      const counts = data.map(item => item.count);
+      const canvas = document.getElementById('topFabricantesChart') as HTMLCanvasElement;
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          this.topFabricantesChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+              labels: fabricantes,
+              datasets: [{
+                data: counts,
+                backgroundColor: this.getColors(counts.length)
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Top 10 Fabricantes com mais Carros'
+                }
+              }
+            } as ChartOptions<'pie'>
+          });
+        }
+      }
     });
   }
 
-  renderTop10FabricantesChart(data: any) {
-    let chart = new CanvasJS.Chart("top10FabricantesChart", {
-      animationEnabled: true,
-      title: {
-        text: "Top 10 Fabricantes"
-      },
-      data: [{
-        type: "pie",
-        startAngle: 240,
-        yValueFormatString: "##0\"%\"",
-        dataPoints: data.map((item: any) => ({ y: item.value, label: item.label }))
-      }]
+  loadTopCarrosComMaisPecas(): void {
+    this.http.get<any[]>(`${this.apiUrl}/peca/listaTop10CarroComMaisPecas`).subscribe(data => {
+      const carros = data.map(item => item.carro);
+      const counts = data.map(item => item.count);
+      const canvas = document.getElementById('topCarrosChart') as HTMLCanvasElement;
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          this.topCarrosChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: carros,
+              datasets: [{
+                data: counts,
+                backgroundColor: this.getColors(counts.length)
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Top 10 Carros com mais Peças'
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            } as ChartOptions<'bar'>
+          });
+        }
+      }
     });
-    chart.render();
   }
 
-  renderTop10CarrosChart(data: any) {
-    let chart = new CanvasJS.Chart("top10CarrosChart", {
-      animationEnabled: true,
-      title: {
-        text: "Top 10 Carros com Mais Peças"
-      },
-      data: [{
-        type: "column",
-        dataPoints: data.map((item: any) => ({ y: item.value, label: item.label }))
-      }]
-    });
-    chart.render();
+  getColors(count: number): string[] {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      colors.push(`rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.6)`);
+    }
+    return colors;
   }
 }

@@ -3,13 +3,13 @@ package br.com.masterclass.superpecas.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Pecas")
+@Table(name = "pecas")
 public class PecaModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PecaID", nullable = false)
-    private int id;
+    private Integer id;
 
     @Column(name = "Nome", nullable = false)
     private String nome;
@@ -17,7 +17,7 @@ public class PecaModel {
     @Column(name = "Descricao", nullable = false)
     private String descricao;
 
-    @Column(name = "NumeroSerie", nullable = false)
+    @Column(name = "NumeroSerie", nullable = false, unique = true)
     private String numeroSerie;
 
     @Column(name = "Fabricante", nullable = false)
@@ -28,12 +28,11 @@ public class PecaModel {
     private CarroModel carro;
 
     // Getters e setters
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

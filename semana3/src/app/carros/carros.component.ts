@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
+import { Router } from '@angular/router';
+import { CarService } from '../services/car.service';
+import { Carro } from '../models/carro.model';
 
 @Component({
   selector: 'app-carros',
@@ -7,48 +9,56 @@ import { DataService } from '../data.service';
   styleUrls: ['./carros.component.css']
 })
 export class CarrosComponent implements OnInit {
-  carros: any[] = [];
-  totalRecords: number = 0;
-  pesquisa: string = '';
+  carros: Carro[] = [];
+  currentPage: number = 1;
+  totalPages: number = 1;
 
-  constructor(private dataService: DataService) { }
+  constructor(private carService: CarService, private router: Router) {}
 
   ngOnInit(): void {
-    this.loadCars({ first: 0, rows: 10 });
+    this.loadCarros();
   }
 
-  loadCars(event: any): void {
-    const page = event.first / event.rows;
-    const size = event.rows;
-    const termo = this.pesquisa ? `/${this.pesquisa}` : '';
-    this.dataService.getCarrosPaginados(page, size, termo).subscribe(data => {
-      this.carros = data.content;
-      this.totalRecords = data.totalElements;
+  loadCarros(page: number = 0): void {
+    this.carService.getCarros(page).subscribe(response => {
+      this.carros = response.content;
+      this.totalPages = response.totalPages;
     });
   }
 
-  cadastrarCarro(): void {
-    // Navegar para a tela de cadastro de carro
+  navigateToAddCar(): void {
+    this.router.navigate(['/carros/add']);
   }
 
-  editarCarro(carro: any): void {
-    // Navegar para a tela de edição de carro com os dados do carro
+  navigateToEditCar(id: number): void {
+    this.router.navigate(['/carros/edit', id]);
   }
 
-  removerCarro(id: number): void {
-    // Implementar a lógica de remoção de carro
+  deleteCar(id: number): void {
+    this.carService.deleteCar(id).subscribe(() => {
+      this.loadCarros(this.currentPage - 1);
+    });
   }
 
-  pesquisar(event: KeyboardEvent): void {
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement) {
-      this.pesquisa = inputElement.value;
-      this.loadCars({ first: 0, rows: 10 });
+  onSearch(event: any): void {
+    const searchTerm = (event.target as HTMLInputElement).value;
+    this.carService.searchCarros(searchTerm, this.currentPage - 1).subscribe(response => {
+      this.carros = response.content;
+      this.totalPages = response.totalPages;
+    });
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadCarros(this.currentPage - 1);
     }
   }
 
-  clearPesquisa(): void {
-    this.pesquisa = '';
-    this.loadCars({ first: 0, rows: 10 });
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadCarros(this.currentPage - 1);
+    }
   }
 }

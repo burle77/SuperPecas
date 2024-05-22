@@ -2,13 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["canvasjs"]
+    "types": []
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/polyfills.ts" // Certifique-se de que este arquivo existe
   ],
   "include": [
-    "src/**/*.d.ts",
-    "src/typings/**/*.d.ts"
+    "src/**/*.d.ts"
   ]
 }

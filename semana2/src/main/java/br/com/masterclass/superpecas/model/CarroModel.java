@@ -19,7 +19,7 @@ public class CarroModel {
     private String fabricante;
 
     @Column(name = "CodigoUnico", nullable = false, unique = true)
-    private String codigoUnico;
+    private String codigoUnico;  // Corrigido para camelCase
 
     // Getters e setters
     public Integer getId() {
@@ -51,6 +51,6 @@ public class CarroModel {
     }
 
     public void setCodigoUnico(String codigoUnico) {
-        this.codigoUnico = codigoUnico;
+        this.codigoUnico = codigoUnico;  
     }
 }

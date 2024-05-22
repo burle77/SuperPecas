@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService } from '../data.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { CarService } from '../services/car.service';
+import { Carro } from '../models/carro.model';
 
 @Component({
   selector: 'app-carro-form',
@@ -10,80 +9,50 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./carro-form.component.css']
 })
 export class CarroFormComponent implements OnInit {
-  carroForm: FormGroup;
+  carro: Carro = new Carro();
   fabricantes: string[] = [];
   isEditMode: boolean = false;
-  carro: any = {};
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
+    private carService: CarService,
     private router: Router,
-    private dataService: DataService,
-    private snackBar: MatSnackBar
-  ) {
-    this.carroForm = this.fb.group({
-      nomeModelo: ['', [Validators.required, Validators.maxLength(255)]],
-      fabricante: ['', Validators.required],
-      codigoUnico: ['', [Validators.required, Validators.maxLength(255)]]
-    });
-  }
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.dataService.getFabricantes().subscribe(fabricantes => {
-      this.fabricantes = fabricantes || [];
-    });
-
     const carroId = this.route.snapshot.paramMap.get('id');
     if (carroId) {
       this.isEditMode = true;
-      this.dataService.getCarroById(carroId).subscribe(carro => {
-        this.carro = carro || {};
-        this.carroForm.patchValue(this.carro);
+      this.carService.getCarro(+carroId).subscribe(data => {
+        this.carro = data;
       });
     }
+    this.loadFabricantes();
   }
 
-  voltar(): void {
+  loadFabricantes(): void {
+    this.carService.getFabricantes().subscribe(data => {
+      this.fabricantes = data;
+    });
+  }
+
+  navigateBack(): void {
     this.router.navigate(['/carros']);
   }
 
   onSubmit(): void {
-    if (this.carroForm.invalid) {
-      return;
-    }
-  
-    console.log('Formulário enviado', this.carroForm.value); 
-  
-    const carroData = this.carroForm.value;
     if (this.isEditMode) {
-      this.dataService.updateCarro(this.carro.id, carroData).subscribe(
-        () => this.showSuccessMessage('Carro atualizado com sucesso!'),
-        () => this.showErrorMessage('Erro ao atualizar o carro.')
-      );
+      this.carService.updateCarro(this.carro).subscribe(() => {
+        this.router.navigate(['/carros']);
+      });
     } else {
-      this.dataService.addCarro(carroData).subscribe(
-        () => this.showSuccessMessage('Carro adicionado com sucesso!'),
-        () => this.showErrorMessage('Erro ao adicionar o carro.')
-      );
+      this.carService.createCarro(this.carro).subscribe(() => {
+        this.router.navigate(['/carros']);
+      });
     }
   }
-  
 
-  onClear(): void {
-    this.carroForm.reset();
-  }
-
-  private showSuccessMessage(message: string): void {
-    this.snackBar.open(message, 'Fechar', {
-      duration: 3000
-    });
-    this.voltar();
-  }
-
-  private showErrorMessage(message: string): void {
-    this.snackBar.open(message, 'Fechar', {
-      duration: 3000
-    });
+  clearForm(): void {
+    this.carro = new Carro();
   }
 }

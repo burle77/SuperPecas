@@ -1,40 +1,22 @@
-<mat-toolbar color="primary">
-    <span>{{isEditMode ? 'Editar carro - ' + (carro?.nomeModelo || '') : 'Adicionar novo carro'}}</span>
-  </mat-toolbar>
-  <div class="container">
-    <button mat-raised-button color="primary" (click)="voltar()">Voltar</button>
-    <form [formGroup]="carroForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <mat-form-field>
-          <input matInput placeholder="Nome do modelo" formControlName="nomeModelo">
-          <mat-error *ngIf="carroForm.get('nomeModelo')?.hasError('required')">
-            Nome do modelo é obrigatório
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="form-group">
-        <mat-form-field>
-          <mat-label>Fabricante</mat-label>
-          <mat-select formControlName="fabricante">
-            <mat-option *ngFor="let fabricante of fabricantes" [value]="fabricante">{{fabricante}}</mat-option>
-          </mat-select>
-          <mat-error *ngIf="carroForm.get('fabricante')?.hasError('required')">
-            Fabricante é obrigatório
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="form-group">
-        <mat-form-field>
-          <input matInput placeholder="Código Único" formControlName="codigoUnico">
-          <mat-error *ngIf="carroForm.get('codigoUnico')?.hasError('required')">
-            Código Único é obrigatório
-          </mat-error>
-        </mat-form-field>
-      </div>
-      <div class="form-buttons">
-        <button mat-raised-button type="reset" (click)="onClear()">Limpar</button>
-        <button mat-raised-button color="primary" type="submit">Gravar</button>
-      </div>
-    </form>
-  </div>
-  
+<div class="carro-form-container">
+  <h2>{{ isEditMode ? 'Editar carro ' + carro.nomeModelo : 'Adicionar novo carro' }}</h2>
+  <button (click)="navigateBack()">Voltar</button>
+
+  <form (ngSubmit)="onSubmit()">
+    <label for="nomeModelo">Nome do Modelo:</label>
+    <input type="text" id="nomeModelo" [(ngModel)]="carro.nomeModelo" name="nomeModelo" required maxlength="255">
+
+    <label for="fabricante">Fabricante:</label>
+    <select id="fabricante" [(ngModel)]="carro.fabricante" name="fabricante" required>
+      <option *ngFor="let fabricante of fabricantes" [value]="fabricante">{{ fabricante }}</option>
+    </select>
+
+    <label for="codigoUnico">Código Único:</label>
+    <input type="text" id="codigoUnico" [(ngModel)]="carro.codigoUnico" name="codigoUnico" required maxlength="255">
+
+    <div class="form-actions">
+      <button type="button" (click)="clearForm()">Limpar</button>
+      <button type="submit">Gravar</button>
+    </div>
+  </form>
+</div>

@@ -1,33 +1,48 @@
 .container {
+  padding: 20px;
+}
+
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header img {
+  height: 50px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
   margin: 20px 0;
 }
 
-.example-form-field {
-  width: 200px;
+.toolbar button {
+  margin-right: 10px;
 }
 
-p-table {
+table {
   width: 100%;
+  border-collapse: collapse;
 }
 
-p-table th, p-table td {
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 10px;
   text-align: left;
-  padding: 8px;
-  border: 1px solid #ddd;
 }
 
-p-table th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-}
-
-p-table td {
-  background-color: #fff;
-}
-
-p-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 }

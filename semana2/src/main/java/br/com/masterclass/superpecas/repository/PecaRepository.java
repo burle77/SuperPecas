@@ -6,9 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface PecaRepository extends JpaRepository<PecaModel, Integer> {
 
     Page<PecaModel> findAll(Pageable pageable);
@@ -21,8 +23,8 @@ public interface PecaRepository extends JpaRepository<PecaModel, Integer> {
 
     List<PecaModel> findByCarroId(int carroId);
 
-    @Query(nativeQuery = true, value = "SELECT Count(pe.PecaID) AS quantidade, CONCAT(ca.NomeModelo, '/', ca.Fabricante) AS carro FROM Pecas pe "
-        + "INNER JOIN Carros ca ON ca.CarroID = pe.CarroID "
+    @Query(nativeQuery = true, value = "SELECT Count(pe.PecaID) AS quantidade, CONCAT(ca.NomeModelo, '/', ca.Fabricante) AS carro FROM pecas pe "
+        + "INNER JOIN carros ca ON ca.CarroID = pe.CarroID "
         + "GROUP BY ca.NomeModelo, ca.Fabricante ORDER BY Count(pe.PecaID) DESC LIMIT 10")
     List<TopCarroPecasDTO> findTop10CarrosComMaisPecas();
 }
